@@ -1,7 +1,7 @@
 {
   "name": "eslint-rule-extender",
   "version": "0.0.0",
-  "description": "",
+  "description": "Utility to extend existing ESLint rules",
   "license": "MIT",
   "author": "Kai Cataldo <kai@kaicataldo.com>",
   "funding": {
