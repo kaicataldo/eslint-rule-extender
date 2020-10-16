@@ -15,6 +15,8 @@ function createExampleRule() {
     meta: {
       type: 'example',
       fixable: false,
+      deprecated: false,
+      replacedBy: ['https://github.com/example-eslint-plugin/example-rule'],
       schema: [
         {
           enum: ['option1', 'option2', 'option3'],
@@ -151,6 +153,61 @@ describe('ruleExtender', () => {
             ruleExtender(rule, {
               metaOverrides: { example: 'another example' },
             }).meta.schema,
+          ).toStrictEqual([]);
+        });
+      });
+
+      describe('meta.deprecated', () => {
+        it('should override the original value when given', () => {
+          expect(
+            ruleExtender(rule, { metaOverrides: { deprecated: true } }).meta
+              .deprecated,
+          ).toEqual(true);
+        });
+
+        it('should not override the original value when not given', () => {
+          expect(
+            ruleExtender(rule, {
+              metaOverrides: { example: 'another example' },
+            }).meta.deprecated,
+          ).toEqual(rule.meta.deprecated);
+        });
+
+        it('should default to false when not set in the original rule or in overrides', () => {
+          delete rule.meta.deprecated;
+          expect(
+            ruleExtender(rule, {
+              metaOverrides: { example: 'another example' },
+            }).meta.deprecated,
+          ).toEqual(false);
+        });
+      });
+
+      describe('meta.replacedBy', () => {
+        it('should override the original value when given', () => {
+          const replacedBy = [
+            'https://github.com/example-eslint-plugin/example-rule',
+          ];
+          expect(
+            ruleExtender(rule, { metaOverrides: { replacedBy } }).meta
+              .replacedBy,
+          ).toStrictEqual(replacedBy);
+        });
+
+        it('should not override the original value when not given', () => {
+          expect(
+            ruleExtender(rule, {
+              metaOverrides: { example: 'another example' },
+            }).meta.replacedBy,
+          ).toStrictEqual(rule.meta.replacedBy);
+        });
+
+        it('should default to empty array when not set in the original rule or in overrides', () => {
+          delete rule.meta.replacedBy;
+          expect(
+            ruleExtender(rule, {
+              metaOverrides: { example: 'another example' },
+            }).meta.replacedBy,
           ).toStrictEqual([]);
         });
       });
