@@ -47,7 +47,7 @@ module.exports = {
 
 ### `metaOverrides`
 
-Overrides for the original rule's `meta` property. The properties of the `meta` object can be found [here](https://eslint.org/docs/developer-guide/working-with-rules#rule-basics).Options
+Overrides for the original rule's `meta` property. The properties of the `meta` object can be found [here](https://eslint.org/docs/developer-guide/working-with-rules#rule-basics).
 
 ```js
 const extendedRule = ruleExtender(originalRule, {
@@ -60,7 +60,9 @@ const extendedRule = ruleExtender(originalRule, {
 
 ### `createAdditionalVisitors`
 
-A function that has the same signature as ESLint rules' `create` method. It is passed the [`context`](https://eslint.org/docs/developer-guide/working-with-rules#the-context-object) object and should return a object of visitor callbacks. See [the official ESLint docs](https://eslint.org/docs/developer-guide/working-with-rules#rule-basics) for more details!
+A function that has the same signature as ESLint rules' `create` method. It is passed the [`context`](https://eslint.org/docs/developer-guide/working-with-rules#the-context-object) object and should return an object of visitor callbacks.  See [the official ESLint docs](https://eslint.org/docs/developer-guide/working-with-rules#rule-basics) for more details!
+
+Note that this will not override existing visitors with the same node names. To modify an existing visitor's report results, please use [`reportOverrides`](#reportoverrides).
 
 ### Example Usage
 
