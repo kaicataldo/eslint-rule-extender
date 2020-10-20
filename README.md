@@ -80,7 +80,7 @@ const extendedRule = ruleExtender(originalRule, {
 
 ### `reportOverrides`
 
-A function that is called with the report metadata of the original rule's [`context.report()`](https://eslint.org/docs/developer-guide/working-with-rules#contextreport) calls. The return value of this function is a trinary with the following behavior:
+A function that is called with the report metadata of the original rule's [`context.report()`](https://eslint.org/docs/developer-guide/working-with-rules#contextreport) calls and a modified [`context`](https://eslint.org/docs/developer-guide/working-with-rules#the-context-object) object. The return value of this function is a trinary with the following behavior:
 
 - `true`: report with original metadata (unchanged)
 - `false`: do not report
@@ -90,8 +90,10 @@ A function that is called with the report metadata of the original rule's [`cont
 
 ```js
 const extendedRule = ruleExtender(originalRule, {
-  reportOverrides(meta) {
-    return meta.node.type !== 'ThisExpression';
+  reportOverrides(meta, context) {
+    // context.parserServices.skipAll may be set by a rule.
+    const skipAll = context.parserServices || {};
+    return skipAll || meta.node.type !== 'ThisExpression';
   },
 });
 ```
