@@ -91,9 +91,30 @@ A function that is called with the report metadata of the original rule's [`cont
 ```js
 const extendedRule = ruleExtender(originalRule, {
   reportOverrides(meta, context) {
-    // context.parserServices.skipAll may be set by a rule.
-    const skipAll = context.parserServices || {};
-    return skipAll || meta.node.type !== 'ThisExpression';
+    if (
+      meta.node.type === 'FunctionExpression' 
+        && context.options[1].ignoreFunctionExpression
+    ) {
+      // These reports will be filtered out.
+      return false;
+    }
+    
+    if (
+        meta.node.parent.arguments[0] === meta.node
+          && meta.node.parent.type === 'CallExpression' 
+          && meta.node.parent.callee.type === 'Identifier' 
+          && meta.node.parent.callee.name === context.options[1].disallowedCallExpressionName
+    ) {
+      // Report with this metadata instead.
+      return {
+        ...meta,
+        node: meta.node.parent,
+        message: `${meta.node.parent.callee.name} no longer supports a callback for the first argument.`,
+      };
+    }
+    
+    // Otherwise, report as usual.
+    return true;
   },
 });
 ```
